@@ -8,18 +8,16 @@
     <style>
         :root { --primary-color: #2c3e50; --secondary-color: #d35400; --bg-color: #f4f7f6; }
         body { font-family: "Microsoft JhengHei", sans-serif; background-color: var(--bg-color); padding: 15px; }
-        .container { max-width: 650px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        .container { max-width: 650px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .header { text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 15px; margin-bottom: 20px; }
         .project-title { background: #e8f4f8; padding: 12px; border-radius: 6px; font-weight: bold; color: #2980b9; text-align: center; margin-bottom: 20px; border: 1px solid #bde0ef; }
         
-        /* 參數欄位：淡橘色背景，文字黑色 */
-        .admin-config { background: #fff3e0; padding: 20px; border-radius: 8px; margin-bottom: 20px; font-size: 0.95em; border: 1px dashed #e67e22; }
-        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .config-item { border-bottom: 1px solid rgba(230, 126, 34, 0.2); padding: 5px 0; color: black; }
+        .admin-config { background: #fff3e0; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.95em; border: 1px dashed #e67e22; color: black; }
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .config-item { border-bottom: 1px solid rgba(230, 126, 34, 0.2); padding: 5px 0; }
         
-        /* 單位確認提醒樣式 */
         .unit-hint { color: #d35400; font-weight: bold; margin-bottom: 15px; padding: 10px; border-left: 4px solid #d35400; background: #fff9f5; font-size: 0.95em; }
-
         .input-group { margin-bottom: 18px; }
         label { display: block; margin-bottom: 6px; font-weight: bold; color: #34495e; }
         .input-flex { display: flex; gap: 8px; }
@@ -30,7 +28,6 @@
         button:hover { background: #1a252f; }
         .btn-download { background: #27ae60; margin-top: 15px; }
 
-        /* 警告區域：文字粗體 */
         .warning { background: #fff5f5; color: #c0392b; padding: 15px; border-radius: 8px; border-left: 5px solid #c0392b; margin: 20px 0; font-size: 0.9em; line-height: 1.6; font-weight: bold; }
         
         .result-box { margin-top: 25px; display: none; border: 2px solid #eee; border-radius: 10px; overflow: hidden; background: white; }
@@ -43,27 +40,24 @@
 
         .footer { margin-top: 30px; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
         .footer a { display: block; color: #3498db; text-decoration: none; margin: 10px 0; font-weight: bold; font-size: 0.95em; }
+
+        /* 隱藏報告模版樣式 */
+        #hidden-report-template { position: absolute; left: -9999px; top: 0; width: 650px; background: white; padding: 40px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-<div class="container" id="capture-content">
+<div class="container">
     <div class="header">
         <h2 style="margin:0;">🏠 都更管家權益試算系統</h2>
     </div>
 
-    <div class="project-title">新北市新店區新和段177地號</div>
+    <div class="project-title" id="display-project-name">新北市新店區新和段177地號</div>
 
     <div class="admin-config">
         <strong>⚙️ 專案開發目前參數設定</strong>
-        <div class="config-grid">
-            <div class="config-item">基地面積: 986.15 坪</div>
-            <div class="config-item">容積率: 280%</div>
-            <div class="config-item">土地預估坪效: 6.743</div>
-            <div class="config-item">預估房價: 80 萬/坪</div>
-            <div class="config-item">共負成本: 35 萬/坪</div>
-            <div class="config-item">公設比: 30%</div>
-        </div>
+        <div class="config-grid" id="display-config-grid">
+            </div>
     </div>
 
     <div class="unit-hint">💡 提醒：填入數據時，請記得確認單位是否正確 (坪 / m²)</div>
@@ -102,16 +96,9 @@
 
     <button onclick="calculate()">產生分析報告</button>
 
-    <div id="result" class="result-box">
+    <div id="result-display" class="result-box">
         <div class="result-header">📊 試算報告結果</div>
-        <div class="result-item"><span class="result-label">1. 最終分回面積(新權狀面積)</span><span class="result-value" id="res1"></span></div>
-        <div class="result-item"><span class="result-label">2. 新室內面積 (含陽台)</span><span class="result-value" id="res2"></span></div>
-        <div class="result-item"><span class="result-label">3. 新室內面積 (不含陽台)</span><span class="result-value" id="res3"></span></div>
-        <div class="result-item"><span class="result-label">4. 室內面積分回比率</span><span class="result-value" id="res4"></span></div>
-        <div class="result-item"><span class="result-label">5. 權狀面積分回比率</span><span class="result-value" id="res5"></span></div>
-        <div class="result-item"><span class="result-label">6. 更新前價值</span><span class="result-value" id="res6"></span></div>
-        <div class="result-item"><span class="result-label">7. 更新後價值</span><span class="result-value" id="res7"></span></div>
-        <div class="result-item"><span class="result-label">8. 預估資產增值金額</span><span class="result-value highlight-value" id="res8"></span></div>
+        <div id="result-items-container"></div>
     </div>
 
     <div class="footer">
@@ -123,18 +110,87 @@
     <button class="btn-download" id="btn-dl" style="display:none;" onclick="takeScreenshot()">💾 下載試算報告圖片</button>
 </div>
 
+<div id="hidden-report-template">
+    <div class="header">
+        <h2 style="margin:0; font-size: 28px;">🏠 都更管家權益試算報告</h2>
+        <p style="color: #666; margin-top: 5px;" id="screenshot-project-name"></p>
+    </div>
+    <div class="admin-config" style="border: 1px solid #e67e22;">
+        <strong style="font-size: 1.1em;">⚙️ 專案開發目前參數設定</strong>
+        <div class="config-grid" id="screenshot-config-grid"></div>
+    </div>
+    <div id="screenshot-result-box" class="result-box" style="display: block; border: 2px solid #d35400;">
+        <div class="result-header" style="font-size: 20px;">📊 試算分析分析結果</div>
+        <div id="screenshot-results-list"></div>
+    </div>
+    <div class="warning" style="margin-top: 30px; font-size: 1.1em;">
+        ⚠️ 重要警告：坪效權值需以【都更審議核准】為準。本報告僅供參考，實際實施內容仍以官方審查核定版本為準。
+    </div>
+    <div class="footer" style="margin-top: 40px; border-top: 2px solid #eee;">
+        <p style="font-size: 1.2em; font-weight: bold;">📢 更多資訊請搜尋「都更管家雅琪」</p>
+        <p style="color: #3498db; font-weight: bold;">FB 社團：自主自辦都更,危老重建討論區-《都更危老解碼室》</p>
+    </div>
+</div>
+
 <script>
+/**
+ * ==========================================
+ * 💡 參數設定中心 (更換案子時請修改這裡)
+ * ==========================================
+ */
+const PROJECT_CONFIG = {
+    name: "新北市新店區新和段177地號", // 專案名稱
+    baseArea: 986.15,            // 1. 基地面積 (坪)
+    far: 280,                    // 2. 容積率 (%)
+    efficiency: 6.743,           // 3. 土地預估坪效
+    priceAfter: 800000,          // 4. 預估房價 (元/坪)
+    costPerPing: 350000,         // 5. 共負成本 (元/坪)
+    publicRatio: 0.3             // 6. 公設比 (30% 請輸入 0.3)
+};
+
+// 頁面載入時自動填入參數文字
+window.onload = function() {
+    const configItems = [
+        `1. 基地面積: ${PROJECT_CONFIG.baseArea} 坪`,
+        `2. 容積率: ${PROJECT_CONFIG.far}%`,
+        `3. 土地預估坪效: ${PROJECT_CONFIG.efficiency}`,
+        `4. 預估房價: ${PROJECT_CONFIG.priceAfter / 10000} 萬/坪`,
+        `5. 共負成本: ${PROJECT_CONFIG.costPerPing / 10000} 萬/坪`,
+        `6. 公設比: ${PROJECT_CONFIG.publicRatio * 100}%`
+    ];
+    
+    // 更新網頁與截圖模版中的文字
+    const updateUI = (containerId) => {
+        const container = document.getElementById(containerId);
+        container.innerHTML = configItems.map(item => `<div class="config-item">${item}</div>`).join('');
+    };
+    updateUI('display-config-grid');
+    updateUI('screenshot-config-grid');
+    document.getElementById('screenshot-project-name').innerText = PROJECT_CONFIG.name + " 專案";
+};
+
+/**
+ * ==========================================
+ * 計算邏輯與功能 (除非算法改變，否則無需修改)
+ * ==========================================
+ */
 function toPing(val, unit) {
     if (!val) return 0;
     return unit === 'm2' ? val * 0.3025 : val;
 }
 
-function calculate() {
-    const landEff = 6.743;
-    const pubRatio = 0.3;
-    const costPerPing = 350000;
-    const priceAfter = 800000;
+const resultLabels = [
+    "1. 最終分回面積(新權狀面積)",
+    "2. 新室內面積 (含陽台)",
+    "3. 新室內面積 (不含陽台)",
+    "4. 室內面積分回比率",
+    "5. 權狀面積分回比率",
+    "6. 更新前價值",
+    "7. 更新後價值",
+    "8. 預估資產增值金額"
+];
 
+function calculate() {
     const uLand = toPing(parseFloat(document.getElementById('in-land').value), document.getElementById('unit-land').value);
     const uOldIndoor = toPing(parseFloat(document.getElementById('in-indoor').value), document.getElementById('unit-indoor').value);
     const uOldTotal = toPing(parseFloat(document.getElementById('in-total').value), document.getElementById('unit-total').value);
@@ -144,8 +200,62 @@ function calculate() {
         alert("請輸入正確的面積數值"); return;
     }
 
-    const targetArea = uLand * landEff;
-    const burden = targetArea * costPerPing;
-    const offsetPing = burden / priceAfter;
-    
+    // 計算核心
+    const targetArea = uLand * PROJECT_CONFIG.efficiency;
+    const burden = targetArea * PROJECT_CONFIG.costPerPing;
+    const offsetPing = burden / PROJECT_CONFIG.priceAfter;
     const finalNewDeed = targetArea - offsetPing;
+    const newIndoorWithBalcony = finalNewDeed * (1 - PROJECT_CONFIG.publicRatio);
+    const newIndoorPure = newIndoorWithBalcony * 0.9;
+    const indoorRatio = (newIndoorPure / uOldIndoor) * 100;
+    const deedRatio = (finalNewDeed / uOldTotal) * 100;
+    const valBefore = uOldTotal * priceBefore;
+    const valAfter = finalNewDeed * PROJECT_CONFIG.priceAfter;
+    const profit = valAfter - valBefore;
+
+    const values = [
+        finalNewDeed.toFixed(2) + " 坪",
+        newIndoorWithBalcony.toFixed(2) + " 坪",
+        newIndoorPure.toFixed(2) + " 坪",
+        indoorRatio.toFixed(1) + " %",
+        deedRatio.toFixed(1) + " %",
+        Math.round(valBefore/10000).toLocaleString() + " 萬元",
+        Math.round(valAfter/10000).toLocaleString() + " 萬元",
+        Math.round(profit/10000).toLocaleString() + " 萬元"
+    ];
+
+    renderResults('result-items-container', values);
+    renderResults('screenshot-results-list', values);
+
+    document.getElementById('result-display').style.display = 'block';
+    document.getElementById('btn-dl').style.display = 'block';
+    document.getElementById('result-display').scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderResults(containerId, values) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    resultLabels.forEach((label, index) => {
+        const item = document.createElement('div');
+        item.className = 'result-item';
+        const isLast = index === resultLabels.length - 1;
+        item.innerHTML = `
+            <span class="result-label">${label}</span>
+            <span class="result-value ${isLast ? 'highlight-value' : ''}">${values[index]}</span>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function takeScreenshot() {
+    const target = document.getElementById('hidden-report-template');
+    html2canvas(target, { scale: 2, backgroundColor: "#ffffff", useCORS: true }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `都更試算報告-${PROJECT_CONFIG.name}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
+}
+</script>
+</body>
+</html>
