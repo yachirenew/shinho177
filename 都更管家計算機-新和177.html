@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>都更管家 - 權益試算系統</title>
+    <title>都更管家 - 權權益試算系統</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root { --primary-color: #2c3e50; --secondary-color: #d35400; --bg-color: #f4f7f6; }
@@ -17,6 +17,9 @@
         .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .config-item { border-bottom: 1px solid rgba(230, 126, 34, 0.2); padding: 5px 0; color: black; }
         
+        /* 新增：單位確認提醒樣式 */
+        .unit-hint { color: #d35400; font-weight: bold; margin-bottom: 15px; padding: 10px; border-left: 4px solid #d35400; background: #fff9f5; font-size: 0.95em; }
+
         .input-group { margin-bottom: 18px; }
         label { display: block; margin-bottom: 6px; font-weight: bold; color: #34495e; }
         .input-flex { display: flex; gap: 8px; }
@@ -54,14 +57,16 @@
     <div class="admin-config">
         <strong>⚙️ 專案開發目前參數設定</strong>
         <div class="config-grid">
-            <div class="config-item">1. 基地面積: 986.15 坪</div>
-            <div class="config-item">2. 容積率: 280%</div>
-            <div class="config-item">3. 土地預估坪效: 6.743</div>
-            <div class="config-item">4. 預估房價: 80 萬/坪</div>
-            <div class="config-item">5. 共負成本: 35 萬/坪</div>
-            <div class="config-item">6. 公設比: 30%</div>
+            <div class="config-item">基地面積: 986.15 坪</div>
+            <div class="config-item">容積率: 280%</div>
+            <div class="config-item">土地預估坪效: 6.743</div>
+            <div class="config-item">預估房價: 80 萬/坪</div>
+            <div class="config-item">共負成本: 35 萬/坪</div>
+            <div class="config-item">公設比: 30%</div>
         </div>
     </div>
+
+    <div class="unit-hint">💡 提醒：填入數據時，請記得確認單位是否正確 (坪 / m²)</div>
 
     <div class="input-group">
         <label>1. 土地持份面積</label>
@@ -86,7 +91,7 @@
     </div>
     
     <div class="input-group">
-        <label>目前房價單價預估 (萬/坪) 註：用於計算增值，也可輸入原取得房屋成本單價</label>
+        <label>目前老屋可售單價(萬/坪) 註：用於計算增值，也可輸入原取得房屋時的成本單價</label>
         <input type="number" id="in-old-price" value="45" step="1">
     </div>
 
